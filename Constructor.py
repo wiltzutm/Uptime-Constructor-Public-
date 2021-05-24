@@ -105,38 +105,38 @@ if (fileNotCreatedError or fileSizeError or extraFilesError or filesNotFoundErro
 #---------------------------------------------------------------------------------------------------------------------------------------------------#
 
 else:
-    for i in range(0,numberOfModules):
-        foldername = rawFileLocation + ipAddresses[i]
-        os.chdir(foldername)
-        numberOfFiles = len(os.listdir(foldername))
-        for j in range(0, numberOfFiles):
-            filename = os.listdir(foldername)[j]
-            sensorID = filename[:-24]
-            sensorLocation = configData['parameters']['locations'][sensorID]
-            newData = pd.read_csv(foldername + '\\' + filename )
+    for i in range(0,numberOfModules):                                                  ## 
+        foldername = rawFileLocation + ipAddresses[i]                                   ##
+        os.chdir(foldername)                                                            ##
+        numberOfFiles = len(os.listdir(foldername))                                     ##
+        for j in range(0, numberOfFiles):                                               ## go to each folder if multiple IFM devices are used
+            filename = os.listdir(foldername)[j]                                        ## 
+            sensorID = filename[:-24]                                                   ## IFM output filenames have 1,2,3 etc in the name which
+            sensorLocation = configData['parameters']['locations'][sensorID]            ## is used to identify the sensor location
+            newData = pd.read_csv(foldername + '\\' + filename )                        ## open the file and read its contents. Can this be done in
+                                                                                        ## a better way??
+            timestamps = newData['Timestamp']                                           ## read the timestamps column and 
+            timestamps = Uptime.ArrangeTimestamps(timestamps)                           ## arrange timestamps i.e. convert them to datetime
+            timestamps = pd.DataFrame(data=timestamps, columns=['Timestamp'])           ## start creating new data frame for timestamps
+            timestamps = Uptime.Insert_row(0,timestamps,'[%Y-%m-%d] [%H:%M:%S:%%us]')   ## by putting back in the new timestamps values
+            timestamps = timestamps.sort_index()                                        ## rearrange the index (this was needed, not sure why!!)
+            timestamps = timestamps['Timestamp'].str.split(expand=True)                 ## split the time and date part (needed for thingworx parser)
 
-            timestamps = newData['Timestamp']
-            timestamps = Uptime.ArrangeTimestamps(timestamps)
-            timestamps = pd.DataFrame(data=timestamps, columns=['Timestamp'])
-            timestamps = Uptime.Insert_row(0,timestamps,'[%Y-%m-%d] [%H:%M:%S:%%us]')
-            timestamps = timestamps.sort_index()
-            timestamps = timestamps['Timestamp'].str.split(expand=True)
-
-            newData = newData.drop(newData.columns[[0,2]],1)
-            newData['Value'] = newData['Value'] / 9.81
-            newData = Uptime.Insert_row(0,newData,'[g]')
-            newData = newData.sort_index()
+            newData = newData.drop(newData.columns[[0,2]],1)                            ## delete the index and original epoch microseconds timestamps
+            newData['Value'] = newData['Value'] / 9.81                                  ## convert m/s2 to 'g'
+            newData = Uptime.Insert_row(0,newData,'[g]')                                ## insert the column headers
+            newData = newData.sort_index()                                              ## again this was needed , not sure why
             
             
-            newData.rename(columns = { 'Value': sensorLocation}, inplace = True)
-            vibData = pd.concat([vibData,newData], axis=1, ignore_index=False)
+            newData.rename(columns = { 'Value': sensorLocation}, inplace = True)        ## name the coulm headers with sensor location
+            vibData = pd.concat([vibData,newData], axis=1, ignore_index=False)          ## add newData df to vibData, iterate for all accelerometers
 
-    vibData.insert(0,' ',timestamps[0])
-    vibData.insert(1,'  ',timestamps[1])
-    vibData.insert(2,'StartLogger',startLoggerData)
+    vibData.insert(0,' ',timestamps[0])                                                 ## needed for tw parser        
+    vibData.insert(1,'  ',timestamps[1])                                                ## needed for tw parser
+    vibData.insert(2,'StartLogger',startLoggerData)                                     ## needed for tw parser
     print ('\n\nData Files Combined...')
     sleep(2)
-    vibData.to_csv(constructedFilesLocation + constructedFileName,index=False, sep='\t')
+    vibData.to_csv(constructedFilesLocation + constructedFileName,index=False, sep='\t')    ## output the file    
     print ('\n\nConstructed File Created...')
     sleep(2)
 
