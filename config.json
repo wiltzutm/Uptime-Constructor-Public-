@@ -1,0 +1,42 @@
+{
+    "parameters": 
+        {
+            "ipAddresses":[
+                "192.168.1.20"
+                ],
+
+            "contract": "L00xxxx",
+          
+            "locations":{
+                "192.168.1.20-1":"VSE_FAN1_NDE",
+                "192.168.1.20-2":"VSE_FAN1_DEX",
+                "192.168.1.20-3":"VSE_FAN1_DEZ",
+                "192.168.1.20-4":"Spare1",
+                "192.168.1.21-1":"Spare2",
+                "192.168.1.21-2":"Spare3",
+                "192.168.1.21-3":"Spare4",
+                "192.168.1.21-4":"Spare5",
+                "192.168.1.22-1":"Spare6",
+                "192.168.1.22-2":"Spare7",
+                "192.168.1.22-3":"Spare8",
+                "192.168.1.22-4":"Spare9",
+                "192.168.1.23-1":"Spare10",
+                "192.168.1.23-2":"Spare11",
+                "192.168.1.23-3":"Spare12",
+                "192.168.1.23-4":"Spare13"
+                },
+
+            "outputFileNamePrefix":"Howden_VibStation_1_",
+            
+            "rawFileLocation" : "C:\\IFM Reader\\Output Files\\",
+
+            "archiveLocation" : "C:\\Archive\\",
+
+            "constructedFilesLocation" : "C:\\IFM Reader\\Constructed Files\\",
+
+            "minFileSize": "50",
+
+            "runTime" : "15"
+        }
+
+    }
