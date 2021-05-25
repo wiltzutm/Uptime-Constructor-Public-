@@ -1,0 +1,114 @@
+{
+    "customer": "Evil Company Ltd.",
+    "contacts": [
+        {
+            "id": "Rambo",
+            "name": "John Rambo",
+            "title": "Maintenance specialist",
+            "email": "john.rambo@evil.com"
+        },
+        {
+            "id": "Jude",
+            "name": "Judie Dench",
+            "title": "Project manager",
+            "email": "judie.dench@evil.com"
+        }
+    ],
+    "maintainers": [
+        {
+            "id": "Randy",
+            "name": "Randy Repo",
+            "email": "randy.repo@mymaintenancecompany.com"
+        },
+        {
+            "id": "Mandy",
+            "name": "Mandy Maintainer",
+            "email": "mandy.maintainer@mymaintenancecompany.com"
+        }
+    ],
+    "projects": [
+        {
+            "name": "Customer project 1",
+            "maintainers": [
+                "Randy",
+                "Mandy"
+            ],
+            "contacts": [
+                "Jude",
+                "Rambo"
+            ],
+            "contract": "L00xxxx",
+            "devices_in_use": [
+                "SecondDevice",
+                "ThirdDevice"
+            ]
+        },
+        {
+            "name": "Customer project 2",
+            "maintainers": [
+                "Mandy"
+            ],
+            "contacts": [
+                "Rambo"
+            ],
+            "contract": "L69xxxx",
+            "devices_in_use": [
+                "FirstDevice"
+            ]
+        }
+    ],
+    "devices": [
+        {
+            "id": "FirstDevice",
+            "ip": "192.168.0.1",
+            "locations": [
+                "Injector Pump",
+                "Electric motor 10kW",
+                "Valve XYZ"
+            ]
+        },
+        {
+            "id": "SecondDevice",
+            "ip": "192.168.0.2",
+            "locations": [
+                "Another injector pump",
+                "Another electric motor 10kW",
+                "Yet another valve XYZ"
+            ]
+        },
+        {
+            "id": "ThirdDevice",
+            "ip": "192.168.0.3",
+            "locations": [
+                "Shaker X",
+                "Shaker Y",
+                "Shaker Z",
+                "Cylinder Z"
+            ]
+        }
+    ],
+    "inputsettings":[
+        {
+            "id":"myinputfolder1",
+            "format":"{uid}-{project}-{datetime}.csv",
+            "folder":"C:/myifmfolder"
+        },
+        {
+            "id":"myinputfolder2",
+            "format":"{uid}-{project}-{datetime}.csv",
+            "folder":"C:/myifmfolder2"
+        }
+    ],
+    "outputsettings":[
+        {
+            "id":"myoutputfolder1",
+            "format":"{company}-{project}-{datetime}.zip",
+            "folder":"C:/myifmfolder"
+        },
+        {
+            "id":"myoutputfolder2",
+            "format":"{company}-{project}-{datetime}.zip",
+            "folder":"C:/myifmfolder2"
+        }
+    ]
+}
