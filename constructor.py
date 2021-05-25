@@ -15,12 +15,17 @@ import os
 import shutil
 from time import sleep
 from zipfile import ZipFile
-import UptimeFunctions as Uptime
+import uptimefunctions as uptime
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 #           Read config.json and appsetting.json files:                                                                                              #
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
-
+# Personally in python I don't like this camelCase naming
+# althought in javascript and java it works well.
+# Pep8 suggest to use underscores between words in variable names
+# class names should be like this ThisIsAClassName
+# for function names same things apply as for variables
+# module names are always lowercase letters.
 configFile = open('config.json')
 configData = json.loads(configFile.read())
 appsettingFile = open('appsettings.json')
@@ -32,13 +37,13 @@ appsettingFile.close()
 #           Functions:                                                                                                                              #
 #---------------------------------------------------------------------------------------------------------------------------------------------------#
 
-def DeleteAllFiles():
+def delete_all_files():
     for i in range(0,int(numberOfModules)):
-            foldername = rawFileLocation + ipAddresses[i]
-            filenameList = os.listdir(foldername)
-            for j in range(0, numberOfFiles):
-                filename = filenameList[j]
-                os.remove(filename)
+        foldername = rawFileLocation + ipAddresses[i]
+        filenameList = os.listdir(foldername)
+        for j in range(0, numberOfFiles):
+            filename = filenameList[j]
+            os.remove(filename)
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------#
 #           Initializations:                                                                                                                         #
@@ -54,8 +59,8 @@ fileSizes = []
 numberOfModules = int(len(configData['parameters']['ipAddresses']))
 ipAddresses = configData['parameters']['ipAddresses']
 sensorsPerModule = int(appData['GlobalSettings']['MaxNumberOfSensors'])
-constructedFileName = configData['parameters']['outputFileNamePrefix'] + str(Uptime.datetime.now().strftime('%Y-%m-%d_%H%M%S')) + '.csv'
-archiveFileName = configData['parameters']['outputFileNamePrefix'] + str(Uptime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')) + '.zip'
+constructedFileName = configData['parameters']['outputFileNamePrefix'] + str(uptime.datetime.now().strftime('%Y-%m-%d_%H%M%S')) + '.csv'
+archiveFileName = configData['parameters']['outputFileNamePrefix'] + str(uptime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')) + '.zip'
 minFileSize = int(configData['parameters']['minFileSize'])
 runTime = int (configData['parameters']['runTime'])
 contract = configData['parameters']['contract']
@@ -67,9 +72,9 @@ for i in range(1,numberSamples): startLoggerData.append('0')
 #           START IFM READER                                                                                                                        #
 #---------------------------------------------------------------------------------------------------------------------------------------------------#
  
-IFM = Uptime.open_program('IFM Reader.exe') ## this exe must be in the same folder as IFM
+IFM = uptime.open_program('IFM Reader.exe') ## this exe must be in the same folder as IFM
 sleep(runTime)
-Uptime.close_program(IFM)
+uptime.close_program(IFM)
 sleep(2)
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -97,7 +102,7 @@ for i in range(0,numberOfModules):
 ## it proceeds
 
 if (fileNotCreatedError or fileSizeError or extraFilesError or filesNotFoundError):
-    DeleteAllFiles()
+    delete_all_files()
     os._exit(0)
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------#
@@ -116,15 +121,15 @@ else:
             newData = pd.read_csv(foldername + '\\' + filename )                        ## open the file and read its contents. Can this be done in
                                                                                         ## a better way??
             timestamps = newData['Timestamp']                                           ## read the timestamps column and 
-            timestamps = Uptime.ArrangeTimestamps(timestamps)                           ## arrange timestamps i.e. convert them to datetime
+            timestamps = uptime.ArrangeTimestamps(timestamps)                           ## arrange timestamps i.e. convert them to datetime
             timestamps = pd.DataFrame(data=timestamps, columns=['Timestamp'])           ## start creating new data frame for timestamps
-            timestamps = Uptime.Insert_row(0,timestamps,'[%Y-%m-%d] [%H:%M:%S:%%us]')   ## by putting back in the new timestamps values
+            timestamps = uptime.Insert_row(0,timestamps,'[%Y-%m-%d] [%H:%M:%S:%%us]')   ## by putting back in the new timestamps values
             timestamps = timestamps.sort_index()                                        ## rearrange the index (this was needed, not sure why!!)
             timestamps = timestamps['Timestamp'].str.split(expand=True)                 ## split the time and date part (needed for thingworx parser)
 
             newData = newData.drop(newData.columns[[0,2]],1)                            ## delete the index and original epoch microseconds timestamps
             newData['Value'] = newData['Value'] / 9.81                                  ## convert m/s2 to 'g'
-            newData = Uptime.Insert_row(0,newData,'[g]')                                ## insert the column headers
+            newData = uptime.Insert_row(0,newData,'[g]')                                ## insert the column headers
             newData = newData.sort_index()                                              ## again this was needed , not sure why
             
             
@@ -154,7 +159,7 @@ for i in range(0,numberOfModules):
 filesArchive.close()
 print('\n\nArchive File Created...')
 sleep(2)
-DeleteAllFiles()
+delete_all_files()
 print ('\n\nAll Raw Files Deleted...')
 sleep(2)
 
@@ -169,7 +174,7 @@ used = used / 2**30
 free = free / 2**30
 
 if (free < 1):
-    Uptime.SendMail(contract,'Disk Space is less than 1 GB')
+    uptime.send_mail(contract,'Disk Space is less than 1 GB')
 
 
 ## TODO:
