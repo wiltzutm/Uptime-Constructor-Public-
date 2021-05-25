@@ -41,7 +41,10 @@
             "devices_in_use": [
                 "SecondDevice",
                 "ThirdDevice"
-            ]
+            ],
+            "input_setting":"myinputfolder1",
+            "output_setting":"myoutputfolder2"
+
         },
         {
             "name": "Customer project 2",
@@ -54,7 +57,9 @@
             "contract": "L69xxxx",
             "devices_in_use": [
                 "FirstDevice"
-            ]
+            ],
+            "input_setting":"myinputfolder1",
+            "output_setting":"myoutputfolder1"
         }
     ],
     "devices": [

@@ -45,6 +45,8 @@ class Project:
     contacts: List[str]
     maintainers: List[str]
     devices_in_use: List[str]
+    input_setting: str
+    output_setting: str
 
 
 @dataclasses.dataclass
@@ -121,6 +123,8 @@ def _parse_output_settings(json_data) -> List[OutputSettings]:
 
 def validate_id_exists(all_objects, used_ids):
     erroneous_cases = []
+    if not isinstance(used_ids, List):
+        used_ids = [used_ids]
     for uid in used_ids:
         was_in = False
         for obj in all_objects:
@@ -134,9 +138,8 @@ def validate_id_exists(all_objects, used_ids):
 
 
 def parse_config_json(filepath) -> BaseConfiguration:
-    f = open(filepath, 'r')
-    json_data = json.loads(f.read())
-    f.close()
+    with open(filepath, 'r') as f:
+        json_data = json.loads(f.read())
     all_devices = _parse_devices(json_data)
     all_contacts = _parse_contacts(json_data)
     all_maintainers = _parse_maintainers(json_data)
@@ -148,6 +151,7 @@ def parse_config_json(filepath) -> BaseConfiguration:
         validate_id_exists(all_contacts, project.contacts)
         validate_id_exists(all_maintainers, project.maintainers)
         validate_id_exists(all_devices, project.devices_in_use)
+        validate_id_exists(all_input_settings, project.input_setting)
     return BaseConfiguration(all_contacts, all_maintainers, all_devices, all_projects, all_input_settings, all_output_settings)
 
 
