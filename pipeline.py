@@ -83,13 +83,15 @@ def run_pipeline_for_single_csv(filepath):
 
 
 columns = []
-datafilepaths = [("sensor 1", "./test_data/data-sensor1.csv"), ("sensor2", "./test_data/data-sensor2.csv"), ("sensor3", "./test_data/data-sensor3.csv")]
+datafilepaths = [("sensor 1", "./test_data/data-sensor1.csv"), ("sensor2",
+                                                                "./test_data/data-sensor2.csv"), ("sensor3", "./test_data/data-sensor3.csv")]
 for name, filepath in datafilepaths:
     column = pd.DataFrame.from_records(
         list(run_pipeline_for_single_csv(filepath)), index=["date", "time"])
     column.rename({'acceleration_g': name}, axis=1, inplace=True)
     columns.append(column)
-result = pd.concat(columns) # This could be changed to non copying with copy=False
+# This could be changed to non copying with copy=False
+result = pd.concat(columns)
 result.sort_index(inplace=True)
 print(result.head(20))
 print(result.tail(20))

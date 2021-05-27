@@ -67,7 +67,7 @@ class BaseConfiguration:
 #     return result
 
 def clean_id_json_to_dict(js):
-    result = {} 
+    result = {}
     result["_id"] = js.get("id", None)
     attrs = set(js.keys())
     attrs.remove('id')
@@ -86,7 +86,8 @@ def clean_id_json_to_dict(js):
 def _parse_devices(json_data) -> List[Device]:
     devices = []
     for data in json_data["devices"]:
-        dev = Device(data.get('id', None), data.get("ip", None), [loc for loc in data["locations"]])
+        dev = Device(data.get('id', None), data.get(
+            "ip", None), [loc for loc in data["locations"]])
         devices.append(dev)
     return devices
 
@@ -121,6 +122,7 @@ def _parse_input_settings(json_data) -> List[InputSettings]:
 def _parse_output_settings(json_data) -> List[OutputSettings]:
     return [OutputSettings(**clean_id_json_to_dict(idata)) for idata in json_data["outputsettings"]]
 
+
 def validate_id_exists(all_objects, used_ids):
     erroneous_cases = []
     if not isinstance(used_ids, List):
@@ -134,7 +136,8 @@ def validate_id_exists(all_objects, used_ids):
         if not was_in:
             erroneous_cases.append(uid)
     if erroneous_cases:
-        raise ValueError(f"Cannot find definition of used ids: {erroneous_cases} in config file.") 
+        raise ValueError(
+            f"Cannot find definition of used ids: {erroneous_cases} in config file.")
 
 
 def parse_config_json(filepath) -> BaseConfiguration:
